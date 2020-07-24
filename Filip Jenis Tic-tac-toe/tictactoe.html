@@ -4,19 +4,22 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <title>Tic-tac-toe</title>
         <body>
-            <div style="margin-left: 50px; margin-top: 50px;">
-                <input type="button" class="w3-button w3-grey w3-border" id="0,0" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="0,1" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="0,2" onclick="clickButton(this.id)">
-                <br>
-                <input type="button" class="w3-button w3-grey w3-border" id="1,0" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="1,1" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="1,2" onclick="clickButton(this.id)">
-                <br>
-                <input type="button" class="w3-button w3-grey w3-border" id="2,0" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="2,1" onclick="clickButton(this.id)">
-                <input type="button" class="w3-button w3-grey w3-border" id="2,2" onclick="clickButton(this.id)">
+        <div class="w3-container" style="text-align: center; background: #FFCC1F"><h1><b>Tic Tac Toe</b></h1></div><br>
+                
+            <div class="w3-display-middle">
+                <table>
+                <tr><td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="0,0" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="0,1" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="0,2" onclick="clickButton(this.id)"></td></tr>
+                <tr><td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="1,0" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="1,1" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="1,2" onclick="clickButton(this.id)"></td></tr>
+                <tr><td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="2,0" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="2,1" onclick="clickButton(this.id)"></td>
+                <td><input type="button"  style="width: 100px; height: 100px; font-weight: bold; background: #FFBC1F; color: #000000;" id="2,2" onclick="clickButton(this.id)"></td></tr>
+                </table>
             </div>
+            <div id="winner_display">sssssssssss</div>
             <script>
                 grid = {0:["","",""],1:["","",""],2:["","",""]}
                 result = []
@@ -125,7 +128,8 @@
                         }
                         winner()
                     }
-                    function winner(){
+                }
+                function winner(){
                     won = ""
                     for(var row=0;row<3;row++){
                         result = []
@@ -141,7 +145,7 @@
                     if(!(won=="")){
                         console.log(won,"row, column")
                         if (won === "O"){
-                            setTimeout(pc,100)
+                            pc()
                         }
                         if (won === "X"){
                             setTimeout(you,100)
@@ -162,7 +166,7 @@
                     if(!(won=="")){
                         console.log(won,"column, row")
                         if (won === "O"){
-                            setTimeout(pc,100)
+                            pc()
                         }
                         if (won === "X"){
                             setTimeout(you,100)
@@ -181,7 +185,7 @@
                     if(!(won=="")){
                         console.log(won,"diagonal right")
                         if (won === "O"){
-                            setTimeout(pc,100)
+                            pc()
                         }
                         if (won === "X"){
                             setTimeout(you,100)
@@ -200,7 +204,7 @@
                     if(!(won=="")){
                         console.log(won,"diagonal left")
                         if (won === "O"){
-                            setTimeout(pc,100)
+                            pc()
                         }
                         if (won === "X"){
                             setTimeout(you,100)
@@ -208,20 +212,35 @@
                         return
                     }
                     result=[]
-                        for(var row=0; row<3; row++){
-                            for(var column=0; column<3; column++){
-                                if (grid[column][row]==""){
-                                    result.push(grid[column][row])
-                                }
+                    for(var row=0; row<3; row++){
+                        for(var column=0; column<3; column++){
+                            if (grid[column][row]==""){
+                                result.push(grid[column][row])
                             }
                         }
-                        if(!(result.includes(""))){
-                            setTimeout(tie,100)
+                    }
+                    if(!(result.includes(""))){
+                        setTimeout(tie,100)
+                    }
+                    for(var row=0;row<3;row++){
+                        for(var column=0;column<3;column++){
+                            console.log(document.getElementById(column+","+row).disabled,column+","+row)
+                            if(document.getElementById(column+","+row).disabled){
+                                document.getElementById(column+","+row).style.cursor = "not-allowed"
+                                document.getElementById(column+","+row).style.background = "#856210"
+                            }
+                            else{
+                                document.getElementById(column+","+row).style.cursor = "auto"
+                                document.getElementById(column+","+row).style.background = "#FFBC1F"
+                            }
                         }
                     }
                 }
                 function pc(){
-                    alert("Computer won!")
+                    //alert("Computer won!")
+                    //REEEEEEEEEEEEEEEEEEEE WHY NO WORK :(
+                    console.log("im here")
+                    document.getElementById("winner_display").innerHtml += '<div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;"><span class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">x</span><p><b><h1>The ai won!</h1></b></p></div>'
                 }
                 function tie(){
                     alert("It's a tie!")
