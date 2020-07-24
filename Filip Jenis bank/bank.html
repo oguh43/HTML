@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="SHORTCUT ICON" href="icon.ico" type="image/x-icon" />
+        <link rel="ICON" href="icon.ico" type="image/ico" />
+        <title>The Bank</title>
+    </head>
+    <body>
+        <div class="w3-container w3-center w3-light-grey" id="heading">
+            <img src="logo.png" alt="Logo" height="80px" width="140px">
+        </div>
+        <div class="w3-bar w3-brown">
+            <a href="javascript:createClient()" class="w3-bar-item w3-button">Create Client</a>
+            <a href="javascript:showClients()" class="w3-bar-item w3-button">Clients list</a>
+            <a href="javascript:depositWithdraw()" class="w3-bar-item w3-button">Deposit/withdraw</a>
+            <a href="javascript:selectSender()" class="w3-bar-item w3-button">Transfer</a>
+            <a href="javascript:removeClient()" class="w3-bar-item w3-button">Remove Clients</a>
+        </div>
+        <!--
+        <div id="buttons">
+            <input type="button" class="w3-button w3-brown w3-round-large" name="create" id="create" value="Create Client" onclick="createClient()">
+            <input type="button" class="w3-button w3-brown w3-round-large" name="list" id="list" value="Clients List" onclick="showClients()">
+            <input type="button" class="w3-button w3-brown w3-round-large" name="transaction" id="transaction" value="Deposit/withdraw" onclick="depositWithdraw()">
+            <input type="button" class="w3-button w3-brown w3-round-large" name="remove" id="remove" value="Remove Clients" onclick="removeClient()">
+        </div>-->
+        <br>
+        <div class="functions" id="functions">
+
+        </div>
+        <script>
+            clientsList = {"Hugo_Bohácsek":{"balance":0,"age":18,"name":"Hugo","surname":"Bohácsek","registration_date":"1/1/2020 00:00 AM","gender":"male"},"Filip Jenis":{"balance":0,"age":18,"name":"Filip","surname":"Jenis","registration_date":"1/1/2020 00:00 AM","gender":"male"},"Štefan Dubnička":{"balance":50,"age":18,"name":"Štefan","surname":"Dubnička","registration_date":"1/1/2020 00:00 AM","gender":"male"},"Lukáš_Lenčeš":{"balance":100,"age":18,"name":"Lukáš","surname":"Lenčeš","registration_date":"1/1/2020 00:00 AM","gender":"male"},"Martin Kuba":{"balance":30,"age":18,"name":"Martin","surname":"Kuba","registration_date":"1/1/2020 00:00 AM","gender":"female"}}
+            createClient()
+            function createClient(){
+                document.getElementById("functions").innerHTML = `
+                <div class="w3-container w3-brown">
+                    <h2>Create new client</h2>
+                </div>
+                <form class="w3-container" action="javascript:addClient(firstName.value,surName.value,age.value,gender.value)">
+                    <p>      
+                    <label class="w3-text-brown"><b>Name</b></label>
+                    <input class="w3-input w3-border w3-light-grey" name="firstName" id="firstName" type="text" required></p>
+                    <p>      
+                    <label class="w3-text-brown"><b>Surname</b></label>
+                    <input class="w3-input w3-border w3-light-grey" name="surName" id="surName" type="text" required></p>
+                    <p>
+                    <label class="w3-text-brown"><b>Age</b></label>
+                    <input class="w3-input w3-border w3-light-grey" name="age" id="age" type="number" required></p>
+                    <p>
+                    <label class="w3-text-brown"><b>Gender</b></label>
+                    <select class="w3-select w3-border w3-light-grey" name="gender" id="gender" required>
+                    <option value="" disabled selected>Choose client's gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                    </select></p>
+                    <p>
+                    <button class="w3-btn w3-brown">Create</button></p>
+                </form>
+                `
+                /*
+                document.getElementById("functions").innerHTML = "<input type='text' name='firstName' id='firstName' placeholder='Client name'>"
+                document.getElementById("functions").innerHTML += "<input type='text' name='surName' id='surName' placeholder='Client surname'>"
+                document.getElementById("functions").innerHTML += "<input type='number' name='ageButton' id='ageButton' placeholder='Client age'>"
+                document.getElementById("functions").innerHTML += "<input type='button' name='submitButtons' id='submitButton' value='Submit' onclick='addClient(firstName.value,surName.value,ageButton.value)'>"
+                */
+            }
+            function addClient(name,surname,age,gender){
+                id = name+surname
+                count = 0
+                id_change = id
+                for (key in clientsList){
+                    if (id===key){
+                        count++
+                        id_change = id + count
+                    }
+                    if (id_change===key){
+                        count++
+                        id_change = id + count
+                    }
+                }
+                id = id_change
+                clientsList[id] = {}
+                clientsList[id]["name"] = name
+                clientsList[id]["surname"] = surname
+                clientsList[id]["age"] = Math.abs(age)
+                clientsList[id]["gender"] = gender
+                clientsList[id]["balance"] = 0
+                console.log(clientsList)
+                document.getElementById("functions").innerHTML = ""
+                document.getElementById("functions").innerHTML = `
+                <div class="w3-panel w3-green w3-display-container">
+                    <span onclick="this.parentElement.style.display='none';showClients()"
+                    class="w3-button w3-large w3-display-topright">&times;</span>
+                    <h3>Success!</h3>
+                    <p>Client has been succesfully added.</p>
+                </div>
+                `
+            }
+            function showClients(){
+                document.getElementById("functions").innerHTML = "<h2>Clients list</h2>"
+                document.getElementById("functions").innerHTML += "<input class='w3-input w3-border w3-padding w3-light-grey' type='text' placeholder='Search for names..' id='nameInput' onkeyup='findName()'>"
+                document.getElementById("functions").innerHTML += "<table class='w3-table w3-bordered w3-striped w3-border test w3-hoverable' id='clientsTable'></table>"
+                document.getElementById("clientsTable").innerHTML += "<tr class='w3-brown'><td>Name</td><td>Age</td><td>Gender</td><td>Balance</td></tr>"
+                for (key in clientsList){
+                    document.getElementById("clientsTable").innerHTML +="<tr><td>"+clientsList[key]["name"]+" "+clientsList[key]["surname"]+"</td><td>"+clientsList[key]["age"]+"</td><td>"+clientsList[key]["gender"]+"</td><td>"+clientsList[key]["balance"]+"</td></tr>"
+                }
+            }
+            function depositWithdraw(){
+                document.getElementById("functions").innerHTML = "<h2>Deposit/withdraw</h2>"
+                document.getElementById("functions").innerHTML += "<input class='w3-input w3-border w3-padding w3-light-grey' type='text' placeholder='Search for names..' id='nameInput' onkeyup='findName()'>"
+                document.getElementById("functions").innerHTML += "<table class='w3-table w3-bordered w3-striped w3-border test w3-hoverable' id='clientsTable'></table>"
+                document.getElementById("clientsTable").innerHTML += "<tr class='w3-brown'><td>Name</td><td>Balance</td><td>Transaction</td></tr>"
+                for (key in clientsList){
+                    document.getElementById("clientsTable").innerHTML +="<tr><td>"+clientsList[key]["name"]+" "+clientsList[key]["surname"]+"</td><td>"+clientsList[key]["balance"]+"</td><td><input type='button' class='w3-button w3-green w3-round-xxlarge w3-hover-brown' name='deposit' id='deposit' value='Deposit' onclick='transaction(\"deposit\",\""+key+"\")'></input><input type='button' class='w3-button w3-red w3-round-xxlarge w3-hover-brown' name='withdraw' id='"+key+"' value='Withdraw' onclick='transaction(\"withdraw\",\""+key+"\")'></input></td></tr>"
+                    if (clientsList[key]["balance"] === 0){
+                        document.getElementById(key).disabled = true
+                    }
+                }
+            }
+            function findName() {
+                var input, filter, table, tr, td, i;
+                input = document.getElementById("nameInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("clientsTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 1; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                    }
+                }
+            }
+            function transaction(transactionType,clientId){
+                if (transactionType === "deposit"){
+                    document.getElementById("functions").innerHTML = `
+                    <div class="w3-container w3-brown">
+                        <h2>Deposit</h2>
+                    </div>
+                    <form class="w3-container" action="javascript:deposit(depositAmount.value,'`+clientId+`')">
+                        <p>
+                        <label class="w3-text-brown"><b>Client: </b>`+clientsList[clientId]["name"]+" "+clientsList[clientId]["surname"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Balance: </b>`+clientsList[clientId]["balance"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Amount</b></label>
+                        <input class="w3-input w3-border w3-light-grey" name="depositAmount" id="depositAmount" type="number" required></p>
+                        <p>
+                        <button class="w3-btn w3-brown">Deposit</button></p>
+                    </form>
+                    `
+                }else if(transactionType === "withdraw"){
+                    document.getElementById("functions").innerHTML = `
+                    <div class="w3-container w3-brown">
+                        <h2>Withdraw</h2>
+                    </div>
+                    <form class="w3-container" action="javascript:withdraw(withdrawAmount.value,'`+clientId+`')">
+                        <p>
+                        <label class="w3-text-brown"><b>Client: </b>`+clientsList[clientId]["name"]+" "+clientsList[clientId]["surname"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Balance: </b>`+clientsList[clientId]["balance"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Amount</b></label>
+                        <input class="w3-input w3-border w3-light-grey" name="depositAmount" id="withdrawAmount" type="number" max="`+clientsList[clientId]["balance"]+`" required></p>
+                        <p>
+                        <button class="w3-btn w3-brown">Withdraw</button></p>
+                    </form>
+                    ` 
+                }
+            }
+            function deposit(amount,clientId){
+                clientsList[clientId]["balance"] += Math.abs(parseInt(amount))
+                document.getElementById("functions").innerHTML = `
+                <div class="w3-container w3-brown">
+                    <h2>Deposit</h2>
+                </div>
+                `
+                document.getElementById("functions").innerHTML += `
+                <div class="w3-panel w3-green w3-display-container">
+                    <span onclick="this.parentElement.style.display='none';depositWithdraw()"
+                    class="w3-button w3-large w3-display-topright">&times;</span>
+                    <h3>Success!</h3>
+                    <p>Amount has been deposited.</p>
+                </div>
+                `
+            }
+            function withdraw(amount,clientId){
+                clientsList[clientId]["balance"] -= Math.abs(parseInt(amount))
+                document.getElementById("functions").innerHTML = `
+                <div class="w3-container w3-brown">
+                    <h2>Withdraw</h2>
+                </div>
+                `
+                document.getElementById("functions").innerHTML += `
+                <div class="w3-panel w3-green w3-display-container">
+                    <span onclick="this.parentElement.style.display='none';depositWithdraw()"
+                    class="w3-button w3-large w3-display-topright">&times;</span>
+                    <h3>Success!</h3>
+                    <p>Amount has been withdrawed.</p>
+                </div>
+                `
+            }
+            function removeClient(){
+                document.getElementById("functions").innerHTML = "<h2>Remove clients</h2>"
+                document.getElementById("functions").innerHTML += "<input class='w3-input w3-border w3-padding w3-light-grey' type='text' placeholder='Search for names..' id='nameInput' onkeyup='findName()'>"
+                document.getElementById("functions").innerHTML += "<table class='w3-table w3-bordered w3-striped w3-border test w3-hoverable' id='clientsTable'></table>"
+                document.getElementById("clientsTable").innerHTML += "<tr class='w3-brown'><td>Name</td><td>Age</td><td>Gender</td><td>Balance</td><td> </td></tr>"
+                for (key in clientsList){
+                    document.getElementById("clientsTable").innerHTML +="<tr><td>"+clientsList[key]["name"]+" "+clientsList[key]["surname"]+"</td><td>"+clientsList[key]["age"]+"</td><td>"+clientsList[key]["gender"]+"</td><td>"+clientsList[key]["balance"]+"</td><td><input type='button' class='w3-button w3-red w3-round-xxlarge w3-hover-brown' name='remove' id='remove' value='Remove client' onclick='askDelete(\""+key+"\")'></input></td></tr>"
+                }
+            }
+            function askDelete(clientId){
+                document.getElementById("functions").innerHTML = "<h2>Remove clients</h2>"
+                document.getElementById("functions").innerHTML += `
+                <div class="w3-panel w3-red">
+                    <h3>Removing client</h3>
+                    <p>Do you really want to delete client `+clientsList[clientId]["name"]+" "+clientsList[clientId]["surname"]+`?</p>
+                    <input type="button" class="w3-button w3-white w3-round-xxlarge" name="yes" id="yes" value="Yes" onclick="deleteClient('`+clientId+`')">
+                    <input type="button" class="w3-button w3-white w3-round-xxlarge" name="no" id="no" value="No" onclick="removeClient()">
+                    <br>
+                    <br>
+                </div>
+                `
+            }
+            function deleteClient(clientId){
+                delete clientsList[clientId]
+                document.getElementById("functions").innerHTML = "<h2>Remove clients</h2>"
+                document.getElementById("functions").innerHTML += `
+                <div class="w3-panel w3-red w3-display-container">
+                    <span onclick="this.parentElement.style.display='none';removeClient()"
+                    class="w3-button w3-large w3-display-topright">&times;</span>
+                    <h3>Attention</h3>
+                    <p>Client has been removed.</p>
+                </div>
+                `
+            }
+            function selectSender(){
+                document.getElementById("functions").innerHTML = "<h2>Transfer</h2>"
+                document.getElementById("functions").innerHTML += "<h5>Select sender:</h5>"
+                document.getElementById("functions").innerHTML += "<input class='w3-input w3-border w3-padding w3-light-grey' type='text' placeholder='Search for names..' id='nameInput' onkeyup='findName()'>"
+                document.getElementById("functions").innerHTML += "<table class='w3-table w3-bordered w3-striped w3-border test w3-hoverable' id='clientsTable'></table>"
+                document.getElementById("clientsTable").innerHTML += "<tr class='w3-brown'><td>Name</td><td>Balance</td><td>Selection</td></tr>"
+                for (key in clientsList){
+                    document.getElementById("clientsTable").innerHTML +="<tr><td>"+clientsList[key]["name"]+" "+clientsList[key]["surname"]+"</td><td>"+clientsList[key]["balance"]+"</td><td><input type='button' class='w3-button w3-green w3-round-xxlarge w3-hover-brown' name='sender' id='"+key+"' value='Select' onclick='selectRecipient(\""+key+"\")'></td></tr>"
+                    if (clientsList[key]["balance"] === 0){
+                        document.getElementById(key).disabled = true
+                    }
+                }
+            }
+            function selectRecipient(sender){
+                document.getElementById("functions").innerHTML = "<h2>Transfer</h2>"
+                document.getElementById("functions").innerHTML += "<h5>Select recipient:</h5>"
+                document.getElementById("functions").innerHTML += "<input class='w3-input w3-border w3-padding w3-light-grey' type='text' placeholder='Search for names..' id='nameInput' onkeyup='findName()'>"
+                document.getElementById("functions").innerHTML += "<table class='w3-table w3-bordered w3-striped w3-border test w3-hoverable' id='clientsTable'></table>"
+                document.getElementById("clientsTable").innerHTML += "<tr class='w3-brown'><td>Name</td><td>Balance</td><td>Selection</td></tr>"
+                for (key in clientsList){
+                    if (key === sender){continue}
+                    document.getElementById("clientsTable").innerHTML +="<tr><td>"+clientsList[key]["name"]+" "+clientsList[key]["surname"]+"</td><td>"+clientsList[key]["balance"]+"</td><td><input type='button' class='w3-button w3-green w3-round-xxlarge w3-hover-brown' name='recipient' id='recipient' value='Select' onclick='transferInput(\""+sender+"\",\""+key+"\")'></td></tr>"
+                }
+            }
+            function transferInput(sender,recipient){
+                document.getElementById("functions").innerHTML = `
+                    <div class="w3-container w3-brown">
+                        <h2>Transfer</h2>
+                    </div>
+                    <form class="w3-container" action="javascript:transfer('`+sender+`','`+recipient+`',transferAmount.value)">
+                        <p>
+                        <label class="w3-text-brown"><b>Sender: </b>`+clientsList[sender]["name"]+" "+clientsList[sender]["surname"]+`</label>
+                        <label class="w3-text-brown"><b>Balance: </b>`+clientsList[sender]["balance"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Recipient: </b>`+clientsList[recipient]["name"]+" "+clientsList[recipient]["surname"]+`</label>
+                        <label class="w3-text-brown"><b>Balance: </b>`+clientsList[recipient]["balance"]+`</label></p>
+                        <p>
+                        <label class="w3-text-brown"><b>Amount</b></label>
+                        <input class="w3-input w3-border w3-light-grey" name="transferAmount" id="transferAmount" type="number" max="`+clientsList[sender]["balance"]+`" required></p>
+                        <p>
+                        <button class="w3-btn w3-brown">Transfer</button></p>
+                    </form>
+                    `
+            }
+            function transfer(sender,recipient,amount){
+                clientsList[sender]["balance"] -= Math.abs(parseInt(amount))
+                clientsList[recipient]["balance"] += Math.abs(parseInt(amount))
+                document.getElementById("functions").innerHTML = `
+                <div class="w3-container w3-brown">
+                    <h2>Transfer</h2>
+                </div>
+                `
+                document.getElementById("functions").innerHTML += `
+                <div class="w3-panel w3-green w3-display-container">
+                    <span onclick="this.parentElement.style.display='none';selectSender()"
+                    class="w3-button w3-large w3-display-topright">&times;</span>
+                    <h3>Success!</h3>
+                    <p>Transfer has been completed.</p>
+                </div>
+                `
+            }
+        </script>
+    </body>
+</html>
