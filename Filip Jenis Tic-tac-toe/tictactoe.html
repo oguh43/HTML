@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <title>Tic-tac-toe</title>
+        <body>
+            <div style="margin-left: 50px; margin-top: 50px;">
+                <input type="button" class="w3-button w3-grey w3-border" id="0,0" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="0,1" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="0,2" onclick="clickButton(this.id)">
+                <br>
+                <input type="button" class="w3-button w3-grey w3-border" id="1,0" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="1,1" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="1,2" onclick="clickButton(this.id)">
+                <br>
+                <input type="button" class="w3-button w3-grey w3-border" id="2,0" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="2,1" onclick="clickButton(this.id)">
+                <input type="button" class="w3-button w3-grey w3-border" id="2,2" onclick="clickButton(this.id)">
+            </div>
+            <script>
+                grid = {0:["","",""],1:["","",""],2:["","",""]}
+                result = []
+                let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+                function clickButton(id){
+                    grid_id = id.split(",")
+                    document.getElementById(id).value = "X"
+                    document.getElementById(id).disabled = true
+                    grid[grid_id[0]][grid_id[1]] = "X"
+                    console.log(grid)
+                    for (var a=0;a<1;a++){
+                        for (key in grid){
+                            if (key!=grid_id[0]){
+                                if (grid[key][grid_id[1]] === "X"){
+                                    for (k in grid){
+                                        if ((grid[k][grid_id[1]] === "")&&(a==0)){
+                                            document.getElementById(k+","+[grid_id[1]]).value = "O"
+                                            document.getElementById(k+","+[grid_id[1]]).disabled = true
+                                            grid[k][grid_id[1]] = "O"
+                                            a++
+                                        }
+                                    }
+                                }
+                            }
+                            if (findDuplicates(grid[key])[0] === "X"){
+                                console.log("ok")
+                                for (i in grid[key]){
+                                    if ((grid[key][i] === "")&&(a==0)){
+                                        document.getElementById(key+","+i).value = "O"
+                                        document.getElementById(key+","+i).disabled = true
+                                        grid[key][i] = "O"
+                                        a++
+                                    }
+                                }
+                            }
+                        }
+                        for(var row=0,column=0;row<3,column<3;row++,column++){
+                            if(["X","O"].includes(grid[column][row])){
+                                result.push(grid[column][row])
+                            }
+                        }
+                        if (findDuplicates(result)[0] === "X"){
+                            for(var row=0,column=0;row<3,column<3;row++,column++){
+                                if((grid[column][row] === "")&&(a==0)){
+                                    document.getElementById(column+","+row).value = "O"
+                                    document.getElementById(column+","+row).disabled = true
+                                    grid[column][row] = "O"
+                                    a++
+                                }
+                            }
+                        }
+                        result=[]
+                        for(var row=0,column=2;row<3,column>=0;row++,column--){
+                            if(["X","O"].includes(grid[column][row])){
+                                result.push(grid[column][row])
+                            }
+                        }
+                        if (findDuplicates(result)[0] === "X"){
+                            for(var row=0,column=2;row<3,column>=0;row++,column--){
+                                if((grid[column][row] === "")&&(a==0)){
+                                    document.getElementById(column+","+row).value = "O"
+                                    document.getElementById(column+","+row).disabled = true
+                                    grid[column][row] = "O"
+                                    a++
+                                }
+                            }
+                        }
+                        result=[]
+                        grid_write = []
+                        for(var row=0; row<3; row++){
+                            for(var column=0; column<3; column++){
+                                if (grid[column][row]==""){
+                                    result.push(column+","+row)
+                                }
+                            }
+                        }
+                        empty=[]
+                        for(var row=0; row<3; row++){
+                            for(var column=0; column<3; column++){
+                                if (grid[column][row]==""){
+                                    empty.push(grid[column][row])
+                                }
+                            }
+                        }
+                        if (a==0){
+                            if(empty.includes("")){
+                                if (grid[1][1]!=""){
+                                    c=Math.floor(Math.random()*(result.length-1))
+                                    rnd = result[c]
+                                    console.log(c,result,rnd)
+                                    grid_write = rnd.split(",")
+                                    try{
+                                        document.getElementById(rnd).value = "O"
+                                        document.getElementById(rnd).disabled = true
+                                        grid[grid_write[0]][grid_write[1]] = "O"
+                                    }catch(err){
+                                        //pass
+                                    }
+                                    finally{grid[rnd.split(",")[0]][rnd.split(",")[1]] = "O"}
+                                }else{
+                                    document.getElementById("1,1").value = "O"
+                                    document.getElementById("1,1").disabled = true
+                                    grid[1][1] = "O"
+                                }
+                            }
+                        }
+                        winner()
+                    }
+                    function winner(){
+                    won = ""
+                    for(var row=0;row<3;row++){
+                        result = []
+                        for(var column=0;column<3;column++){
+                            if(["X","O"].includes(grid[column][row])){
+                                result.push(grid[column][row])
+                                if((new Set(result).size==1)&&(result.length==3)){
+                                    won = result[0]
+                                }
+                            }
+                        }
+                    }
+                    if(!(won=="")){
+                        console.log(won,"row, column")
+                        if (won === "O"){
+                            setTimeout(pc,100)
+                        }
+                        if (won === "X"){
+                            setTimeout(you,100)
+                        }
+                        return
+                    }
+                    for(var column=0;column<3;column++){
+                        result = []
+                        for(var row=0;row<3;row++){
+                            if(["X","O"].includes(grid[column][row])){
+                                result.push(grid[column][row])
+                                if((new Set(result).size==1)&&(result.length==3)){
+                                    won = result[0]
+                                }
+                            }
+                        }
+                    }
+                    if(!(won=="")){
+                        console.log(won,"column, row")
+                        if (won === "O"){
+                            setTimeout(pc,100)
+                        }
+                        if (won === "X"){
+                            setTimeout(you,100)
+                        }
+                        return
+                    }
+                    result = []
+                    for(var row=0,column=0;row<3,column<3;row++,column++){
+                        if(["X","O"].includes(grid[column][row])){
+                            result.push(grid[column][row])
+                            if((new Set(result).size==1)&&(result.length==3)){
+                                won = result[0]
+                            }
+                        }
+                    }
+                    if(!(won=="")){
+                        console.log(won,"diagonal right")
+                        if (won === "O"){
+                            setTimeout(pc,100)
+                        }
+                        if (won === "X"){
+                            setTimeout(you,100)
+                        }
+                        return
+                    }
+                    result = []
+                    for(var row=0,column=2;row<3,column>=0;row++,column--){
+                        if(["X","O"].includes(grid[column][row])){
+                            result.push(grid[column][row])
+                            if((new Set(result).size==1)&&(result.length==3)){
+                                won = result[0]
+                            }
+                        }
+                    }
+                    if(!(won=="")){
+                        console.log(won,"diagonal left")
+                        if (won === "O"){
+                            setTimeout(pc,100)
+                        }
+                        if (won === "X"){
+                            setTimeout(you,100)
+                        }
+                        return
+                    }
+                    result=[]
+                        for(var row=0; row<3; row++){
+                            for(var column=0; column<3; column++){
+                                if (grid[column][row]==""){
+                                    result.push(grid[column][row])
+                                }
+                            }
+                        }
+                        if(!(result.includes(""))){
+                            setTimeout(tie,100)
+                        }
+                    }
+                }
+                function pc(){
+                    alert("Computer won!")
+                }
+                function tie(){
+                    alert("It's a tie!")
+                }
+                function you(){
+                    alert("You won!")
+                }
+            </script>
+        </body>
+    </head>
+</html>
