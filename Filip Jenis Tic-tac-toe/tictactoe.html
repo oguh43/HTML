@@ -239,9 +239,20 @@
                 function pc(){
                     //alert("Computer won!")
                     //REEEEEEEEEEEEEEEEEEEE WHY NO WORK :(
+                    //Fixed :) 25.07.2020
                     console.log("im here")
-                    document.getElementById("winner_display").innerHtml += '<div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;"><span class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">x</span><p><b><h1>The ai won!</h1></b></p></div>'
-                }
+                     document.getElementById("winner_display").innerHTML += `
+                     <div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;">
+                        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
+                            &times;
+                        </span>
+                        <p>
+                            <b>
+                                <h1>The ai won!</h1>
+                            </b>
+                        </p>
+                     </div>
+                    `                }
                 function tie(){
                     alert("It's a tie!")
                 }
