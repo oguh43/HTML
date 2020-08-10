@@ -133,7 +133,9 @@
                 }
             }
             function winner(){
+                /*Checks the board after every game move for pottential game ending*/
                 won = ""
+                /*Checks columns for winners*/
                 for(var row=0;row<3;row++){
                     result = []
                     for(var column=0;column<3;column++){
@@ -146,7 +148,7 @@
                     }
                 }
                 if(!(won=="")){
-                    console.log(won,"row, column")
+                    console.log(`${won} won, type = \'column\' `)
                     if (won === "O"){
                         pc()
                     }
@@ -155,6 +157,7 @@
                     }
                     return
                 }
+                /*Checks rows for winners*/
                 for(var column=0;column<3;column++){
                     result = []
                     for(var row=0;row<3;row++){
@@ -167,7 +170,7 @@
                     }
                 }
                 if(!(won=="")){
-                    console.log(won,"column, row")
+                    console.log(`${won} won, type = \'row\' `)
                     if (won === "O"){
                         pc()
                     }
@@ -177,6 +180,7 @@
                     return
                 }
                 result = []
+                /*Checks diagonally right for winners*/
                 for(var row=0,column=0;row<3,column<3;row++,column++){
                     if(["X","O"].includes(grid[column][row])){
                         result.push(grid[column][row])
@@ -186,7 +190,7 @@
                     }
                 }
                 if(!(won=="")){
-                    console.log(won,"diagonal right")
+                    console.log(`${won} won, type = \'diagonal right\' `)
                     if (won === "O"){
                         pc()
                     }
@@ -196,6 +200,7 @@
                     return
                 }
                 result = []
+                /*Checks diagonally left for winners*/
                 for(var row=0,column=2;row<3,column>=0;row++,column--){
                     if(["X","O"].includes(grid[column][row])){
                         result.push(grid[column][row])
@@ -205,7 +210,7 @@
                     }
                 }
                 if(!(won=="")){
-                    console.log(won,"diagonal left")
+                    console.log(`${won} won, type = \'diagonal left\' `)
                     if (won === "O"){
                         pc()
                     }
@@ -215,6 +220,7 @@
                     return
                 }
                 result=[]
+                /*Assures, game does not conclude as a tie, if there are empty fields*/
                 for(var row=0; row<3; row++){
                     for(var column=0; column<3; column++){
                         if (grid[column][row]==""){
@@ -223,8 +229,10 @@
                     }
                 }
                 if(!(result.includes(""))){
+                    console.log("Noone won, it\'s a tie!")
                     setTimeout(tie,100)
                 }
+                /*Loops through the grid to change butto's styles*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
                         console.log(document.getElementById(column+","+row).disabled,column+","+row)
@@ -239,11 +247,25 @@
                     }
                 }
             }
+            function lock(){
+                /*Locks all buttons upon game end*/
+                for(var row=0;row<3;row++){
+                    for(var column=0;column<3;column++){
+                        if(["X","O"].includes(grid[column][row])){
+                            document.getElementById(column+","+row).style.background = "#856210"
+                        }
+                        document.getElementById(column+","+row).disabled = true
+                        document.getElementById(column+","+row).style.cursor = "not-allowed"
+                        /*Uncomment to shade buttons after the game*/
+                        //document.getElementById(column+","+row).style.background = "#856210"
+                    }
+                }
+            }
             function pc(){
-                //alert("Computer won!")
-                console.log("computer won")
+                lock()
+                console.log("Computer won")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
@@ -256,10 +278,10 @@
                 `
             }
             function tie(){
-                //alert("It's a tie!")
-                console.log("tie")
+                lock()
+                console.log("It\'s a tie")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
@@ -272,10 +294,10 @@
                 `
             }
             function you(){
-                //alert("You won!")
-                console.log("user won")
+                lock()
+                console.log("User won")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-green w3-display-container w3-display-middle" style="width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
