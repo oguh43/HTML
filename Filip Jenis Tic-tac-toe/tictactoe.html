@@ -34,8 +34,11 @@
                 grid[grid_id[0]][grid_id[1]] = "X"
                 console.log(grid)
                 for (var a=0;a<1;a++){
+
+                    //loops through entire game grid
                     for (key in grid){
                         if (key!=grid_id[0]){
+                            //checks if player has another mark in the same column
                             if (grid[key][grid_id[1]] === "X"){
                                 for (k in grid){
                                     if ((grid[k][grid_id[1]] === "")&&(a==0)){
@@ -47,8 +50,9 @@
                                 }
                             }
                         }
+
+                        //checks if player has two marks in the same line
                         if (findDuplicates(grid[key])[0] === "X"){
-                            console.log("ok")
                             for (i in grid[key]){
                                 if ((grid[key][i] === "")&&(a==0)){
                                     document.getElementById(key+","+i).value = "O"
@@ -59,11 +63,15 @@
                             }
                         }
                     }
+
+                    //loops diagonally from upper left corner to bottom right corner and pushes marks of player and PC to result
                     for(var row=0,column=0;row<3,column<3;row++,column++){
                         if(["X","O"].includes(grid[column][row])){
                             result.push(grid[column][row])
                         }
                     }
+
+                    //checks if player has two marks in diagonal line
                     if (findDuplicates(result)[0] === "X"){
                         for(var row=0,column=0;row<3,column<3;row++,column++){
                             if((grid[column][row] === "")&&(a==0)){
@@ -74,12 +82,17 @@
                             }
                         }
                     }
+
                     result=[]
+                    
+                    //loops diagonally from bottom left corner to upper right corner and pushes marks of player and PC to result
                     for(var row=0,column=2;row<3,column>=0;row++,column--){
                         if(["X","O"].includes(grid[column][row])){
                             result.push(grid[column][row])
                         }
                     }
+                    
+                    //checks if player has two marks in diagonal line
                     if (findDuplicates(result)[0] === "X"){
                         for(var row=0,column=2;row<3,column>=0;row++,column--){
                             if((grid[column][row] === "")&&(a==0)){
@@ -90,8 +103,11 @@
                             }
                         }
                     }
+
                     result=[]
                     grid_write = []
+                    
+                    //checks entire grid and pushes all empty fields to result
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
                             if (grid[column][row]==""){
@@ -99,7 +115,10 @@
                             }
                         }
                     }
+                    
                     empty=[]
+                    
+                    //checks entire grid and pushes all empty fields to empty
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
                             if (grid[column][row]==""){
@@ -107,12 +126,13 @@
                             }
                         }
                     }
+                    
+                    //if none of above situations apply, computer tries to get center mark, if it is not available, computer gets random mark
                     if (a==0){
                         if(empty.includes("")){
                             if (grid[1][1]!=""){
                                 c=Math.floor(Math.random()*(result.length-1))
                                 rnd = result[c]
-                                console.log(c,result,rnd)
                                 grid_write = rnd.split(",")
                                 try{
                                     document.getElementById(rnd).value = "O"
@@ -129,7 +149,9 @@
                             }
                         }
                     }
+                    
                     winner()
+                
                 }
             }
             function winner(){
