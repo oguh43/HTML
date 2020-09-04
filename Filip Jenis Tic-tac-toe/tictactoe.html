@@ -26,88 +26,90 @@
         <script>
             grid = {0:["","",""],1:["","",""],2:["","",""]}
             result = []
-            let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+            combos = [["0,0","0,1","0,2"],["1,0","1,1","1,2"],["2,0","2,1","2,2"],["0,0","1,0","2,0"],["0,1","1,1","2,1"],["0,2","1,2","2,2"],["0,0","1,1","2,2"],["0,2","1,1","2,0"]]
+            winner = {"X":you(),"O":pc(),"tie":tie()}
             function clickButton(id){
                 grid_id = id.split(",")
                 document.getElementById(id).value = "X"
                 document.getElementById(id).disabled = true
                 grid[grid_id[0]][grid_id[1]] = "X"
-                console.log(grid)
-                for (var a=0;a<1;a++){
-
-                    //loops through entire game grid
-                    for (key in grid){
-                        if (key!=grid_id[0]){
-                            //checks if player has another mark in the same column
-                            if (grid[key][grid_id[1]] === "X"){
-                                for (k in grid){
-                                    if ((grid[k][grid_id[1]] === "")&&(a==0)){
-                                        document.getElementById(k+","+[grid_id[1]]).value = "O"
-                                        document.getElementById(k+","+[grid_id[1]]).disabled = true
-                                        grid[k][grid_id[1]] = "O"
-                                        a++
-                                    }
-                                }
+                ai()
+                winner()
+            }
+            function ai(){
+                for (var player of ["O","X"]){
+                    console.log(player)
+                    res = []
+                    empty = []
+                    for (var column=0;column<3;column++){
+                        res = []
+                        empty = []
+                        for (var row=0;row<3;row++){
+                            if([player].includes(grid[column][row])){
+                                res.push([column,row])
+                            }
+                            if([""].includes(grid[column][row])){
+                                empty.push([column,row])
                             }
                         }
-
-                        //checks if player has two marks in the same line
-                        if (findDuplicates(grid[key])[0] === "X"){
-                            for (i in grid[key]){
-                                if ((grid[key][i] === "")&&(a==0)){
-                                    document.getElementById(key+","+i).value = "O"
-                                    document.getElementById(key+","+i).disabled = true
-                                    grid[key][i] = "O"
-                                    a++
-                                }
-                            }
+                        if(res.length === 2 && empty.length === 1){
+                            document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
+                            document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
+                            grid[empty[0][0]][empty[0][1]] = "O"
+                            return
                         }
                     }
-
-                    //loops diagonally from upper left corner to bottom right corner and pushes marks of player and PC to result
+                    for (var row=0;row<3;row++){
+                        res = []
+                        empty = []
+                        for (var column=0;column<3;column++){
+                            if([player].includes(grid[column][row])){
+                                res.push([column,row])
+                            }
+                            if([""].includes(grid[column][row])){
+                                empty.push([column,row])
+                            }
+                        }
+                        if(res.length === 2 && empty.length === 1){
+                            document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
+                            document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
+                            grid[empty[0][0]][empty[0][1]] = "O"
+                            return
+                        }
+                    }
+                    res = []
+                    empty = []
                     for(var row=0,column=0;row<3,column<3;row++,column++){
-                        if(["X","O"].includes(grid[column][row])){
-                            result.push(grid[column][row])
-                        }
-                    }
-
-                    //checks if player has two marks in diagonal line
-                    if (findDuplicates(result)[0] === "X"){
-                        for(var row=0,column=0;row<3,column<3;row++,column++){
-                            if((grid[column][row] === "")&&(a==0)){
-                                document.getElementById(column+","+row).value = "O"
-                                document.getElementById(column+","+row).disabled = true
-                                grid[column][row] = "O"
-                                a++
+                        if([player].includes(grid[column][row])){
+                                res.push([column,row])
                             }
+                        if([""].includes(grid[column][row])){
+                            empty.push([column,row])
                         }
                     }
-
-                    result=[]
-                    
-                    //loops diagonally from bottom left corner to upper right corner and pushes marks of player and PC to result
+                    if(res.length === 2 && empty.length === 1){
+                        document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
+                        document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
+                        grid[empty[0][0]][empty[0][1]] = "O"
+                        return
+                    }
+                    res = []
+                    empty = []
                     for(var row=0,column=2;row<3,column>=0;row++,column--){
-                        if(["X","O"].includes(grid[column][row])){
-                            result.push(grid[column][row])
-                        }
-                    }
-                    
-                    //checks if player has two marks in diagonal line
-                    if (findDuplicates(result)[0] === "X"){
-                        for(var row=0,column=2;row<3,column>=0;row++,column--){
-                            if((grid[column][row] === "")&&(a==0)){
-                                document.getElementById(column+","+row).value = "O"
-                                document.getElementById(column+","+row).disabled = true
-                                grid[column][row] = "O"
-                                a++
+                        if([player].includes(grid[column][row])){
+                                res.push([column,row])
                             }
+                        if([""].includes(grid[column][row])){
+                            empty.push([column,row])
                         }
                     }
-
-                    result=[]
-                    grid_write = []
-                    
-                    //checks entire grid and pushes all empty fields to result
+                    if(res.length === 2 && empty.length === 1){
+                        document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
+                        document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
+                        grid[empty[0][0]][empty[0][1]] = "O"
+                        return
+                    }
+                    result = []
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
                             if (grid[column][row]==""){
@@ -115,43 +117,43 @@
                             }
                         }
                     }
-                    
-                    empty=[]
-                    
-                    //checks entire grid and pushes all empty fields to empty
-                    for(var row=0; row<3; row++){
-                        for(var column=0; column<3; column++){
-                            if (grid[column][row]==""){
-                                empty.push(grid[column][row])
+                    console.log("Near end")
+                    if(result.length<9){
+                        if (grid[1][1]!=""){
+                            if(player === "X"){
+                                grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
+                                console.log(grid_write,"grid_write")
+                                document.getElementById(grid_write.join(",")).value = "O"
+                                document.getElementById(grid_write.join(",")).disabled = true
+                                grid[grid_write[0]][grid_write[1]] = "O"
+                                return
                             }
+                        }else{
+                            document.getElementById("1,1").value = "O"
+                            document.getElementById("1,1").disabled = true
+                            grid[1][1] = "O"
+                            return
                         }
                     }
-                    
-                    //if none of above situations apply, computer tries to get center mark, if it is not available, computer gets random mark
-                    if (a==0){
-                        if(empty.includes("")){
-                            if (grid[1][1]!=""){
-                                c=Math.floor(Math.random()*(result.length-1))
-                                rnd = result[c]
-                                grid_write = rnd.split(",")
-                                try{
-                                    document.getElementById(rnd).value = "O"
-                                    document.getElementById(rnd).disabled = true
-                                    grid[grid_write[0]][grid_write[1]] = "O"
-                                }catch(err){
-                                    //pass
-                                }
-                                finally{grid[rnd.split(",")[0]][rnd.split(",")[1]] = "O"}
-                            }else{
-                                document.getElementById("1,1").value = "O"
-                                document.getElementById("1,1").disabled = true
-                                grid[1][1] = "O"
+                    //Unimplemented big brain for loops
+                    /*
+                    result = []
+                    for (var outer_combos of combos){
+                        for (var combo of outer_combos){
+                            if(document.getElementById(combo).value === player){
+                                result.push(player)
                             }
                         }
+                        if (result.length === 3){
+                            winner[result[0]]
+                            return
+                        }
+                        result = []
                     }
-                    
-                    winner()
-                
+                    if (!(grid.find(""))){
+                        winner["tie"]
+                        return
+                    }*/
                 }
             }
             function winner(){
@@ -254,10 +256,10 @@
                     console.log("Noone won, it\'s a tie!")
                     setTimeout(tie,100)
                 }
-                /*Loops through the grid to change butto's styles*/
+                /*Loops through the grid to change buttons styles*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
-                        console.log(document.getElementById(column+","+row).disabled,column+","+row)
+                        //console.log(document.getElementById(column+","+row).disabled,column+","+row)
                         if(document.getElementById(column+","+row).disabled){
                             document.getElementById(column+","+row).style.cursor = "not-allowed"
                             document.getElementById(column+","+row).style.background = "#856210"
@@ -287,7 +289,7 @@
                 lock()
                 console.log("Computer won")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
@@ -303,7 +305,7 @@
                 lock()
                 console.log("It\'s a tie")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
@@ -319,7 +321,7 @@
                 lock()
                 console.log("User won")
                 document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-display-container w3-display-middle" style="background: #FFBC1F; width: 100%; text-align: center;">
+                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
