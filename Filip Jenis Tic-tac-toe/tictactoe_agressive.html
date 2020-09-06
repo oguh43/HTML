@@ -26,16 +26,18 @@
         <script>
             grid = {0:["","",""],1:["","",""],2:["","",""]}
             result = []
-            let findDuplicates = arr => arr.filter((item, index) => arr.indexOf(item) != index)
+            combos = [["0,0","0,1","0,2"],["1,0","1,1","1,2"],["2,0","2,1","2,2"],["0,0","1,0","2,0"],["0,1","1,1","2,1"],["0,2","1,2","2,2"],["0,0","1,1","2,2"],["0,2","1,1","2,0"]]
+            winners = {"X":"you","O":"ai","tie":"tie"}
             function clickButton(id){
+                /*Handles button clicking. Is responsible for executing ai*/
                 grid_id = id.split(",")
                 document.getElementById(id).value = "X"
                 document.getElementById(id).disabled = true
                 grid[grid_id[0]][grid_id[1]] = "X"
                 ai()
-                winner()
             }
             function ai(){
+                /*Handles ai. The order of O,X matters, if O is firsr, the ai will first attack and than defend.*/
                 for (var player of ["O","X"]){
                     console.log(player)
                     res = []
@@ -55,7 +57,7 @@
                             document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
                             document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                             grid[empty[0][0]][empty[0][1]] = "O"
-                            return
+                            return winner()
                         }
                     }
                     for (var row=0;row<3;row++){
@@ -73,7 +75,7 @@
                             document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
                             document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                             grid[empty[0][0]][empty[0][1]] = "O"
-                            return
+                            return winner()
                         }
                     }
                     res = []
@@ -90,7 +92,7 @@
                         document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
                         document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                         grid[empty[0][0]][empty[0][1]] = "O"
-                        return
+                        return winner()
                     }
                     res = []
                     empty = []
@@ -106,7 +108,7 @@
                         document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
                         document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                         grid[empty[0][0]][empty[0][1]] = "O"
-                        return
+                        return winner()
                     }
                     result = []
                     for(var row=0; row<3; row++){
@@ -116,130 +118,32 @@
                             }
                         }
                     }
-                    console.log("Near end")
-                    if(result.length<9){
+                    if(result.length > 1 && result.length<9){
                         if (grid[1][1]!=""){
                             if(player === "X"){
+                                console.log(result)
                                 grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
                                 console.log(grid_write,"grid_write")
                                 document.getElementById(grid_write.join(",")).value = "O"
                                 document.getElementById(grid_write.join(",")).disabled = true
                                 grid[grid_write[0]][grid_write[1]] = "O"
-                                return
+                                return winner()
                             }
                         }else{
                             document.getElementById("1,1").value = "O"
                             document.getElementById("1,1").disabled = true
                             grid[1][1] = "O"
-                            return
+                            return winner()
                         }
-                    }  
+                    }else{
+                        return winner()
+                    }
                 }
             }
             function winner(){
-                /*Checks the board after every game move for pottential game ending*/
-                won = ""
-                /*Checks columns for winners*/
-                for(var row=0;row<3;row++){
-                    result = []
-                    for(var column=0;column<3;column++){
-                        if(["X","O"].includes(grid[column][row])){
-                            result.push(grid[column][row])
-                            if((new Set(result).size==1)&&(result.length==3)){
-                                won = result[0]
-                            }
-                        }
-                    }
-                }
-                if(!(won=="")){
-                    console.log(`${won} won, type = \'column\' `)
-                    if (won === "O"){
-                        pc()
-                    }
-                    if (won === "X"){
-                        setTimeout(you,100)
-                    }
-                    return
-                }
-                /*Checks rows for winners*/
-                for(var column=0;column<3;column++){
-                    result = []
-                    for(var row=0;row<3;row++){
-                        if(["X","O"].includes(grid[column][row])){
-                            result.push(grid[column][row])
-                            if((new Set(result).size==1)&&(result.length==3)){
-                                won = result[0]
-                            }
-                        }
-                    }
-                }
-                if(!(won=="")){
-                    console.log(`${won} won, type = \'row\' `)
-                    if (won === "O"){
-                        pc()
-                    }
-                    if (won === "X"){
-                        setTimeout(you,100)
-                    }
-                    return
-                }
-                result = []
-                /*Checks diagonally right for winners*/
-                for(var row=0,column=0;row<3,column<3;row++,column++){
-                    if(["X","O"].includes(grid[column][row])){
-                        result.push(grid[column][row])
-                        if((new Set(result).size==1)&&(result.length==3)){
-                            won = result[0]
-                        }
-                    }
-                }
-                if(!(won=="")){
-                    console.log(`${won} won, type = \'diagonal right\' `)
-                    if (won === "O"){
-                        pc()
-                    }
-                    if (won === "X"){
-                        setTimeout(you,100)
-                    }
-                    return
-                }
-                result = []
-                /*Checks diagonally left for winners*/
-                for(var row=0,column=2;row<3,column>=0;row++,column--){
-                    if(["X","O"].includes(grid[column][row])){
-                        result.push(grid[column][row])
-                        if((new Set(result).size==1)&&(result.length==3)){
-                            won = result[0]
-                        }
-                    }
-                }
-                if(!(won=="")){
-                    console.log(`${won} won, type = \'diagonal left\' `)
-                    if (won === "O"){
-                        pc()
-                    }
-                    if (won === "X"){
-                        setTimeout(you,100)
-                    }
-                    return
-                }
-                result=[]
-                /*Assures, game does not conclude as a tie, if there are empty fields*/
-                for(var row=0; row<3; row++){
-                    for(var column=0; column<3; column++){
-                        if (grid[column][row]==""){
-                            result.push(grid[column][row])
-                        }
-                    }
-                }
-                if(!(result.includes(""))){
-                    console.log("Noone won, it\'s a tie!")
-                    setTimeout(tie,100)
-                }
-                /*Loops through the grid to change buttons styles*/
+                /*First for handles button locking and styling. Seconds loops through winning combinations and finds the winner. If none are found, the grid is checked for empty spaces, if none are found, the game results in a tie.*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
-                        //console.log(document.getElementById(column+","+row).disabled,column+","+row)
                         if(document.getElementById(column+","+row).disabled){
                             document.getElementById(column+","+row).style.cursor = "not-allowed"
                             document.getElementById(column+","+row).style.background = "#856210"
@@ -250,9 +154,26 @@
                         }
                     }
                 }
+                for (player of ["O","X"]){
+                    result = []
+                    for (var outer_combos of combos){
+                        for (var combo of outer_combos){
+                            if(document.getElementById(combo).value === player){
+                                result.push(player)
+                            }
+                        }
+                        if (result.length === 3){
+                            return annouce(player)
+                        }
+                        result = []
+                    }
+                }
+                if (!(JSON.stringify(grid).includes("\"\""))){
+                        return annouce("tie")
+                }
             }
-            function lock(){
-                /*Locks all buttons upon game end*/
+            function annouce(who){
+                /*First for loop locks all buttons and adds cursor style. Than a winner is displayed using placeholders and a single line if statement(using syntax: (expression)?True:False).*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
                         if(["X","O"].includes(grid[column][row])){
@@ -264,50 +185,14 @@
                         //document.getElementById(column+","+row).style.background = "#856210"
                     }
                 }
-            }
-            function pc(){
-                lock()
-                console.log("Computer won")
-                document.getElementById("winner_display").innerHTML += `
+                document.getElementById("winner_display").innerHTML = `
                 <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
                     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
                         x
                     </span>
                     <p>
                         <b>
-                            <h1>The ai won!</h1>
-                        </b>
-                    </p>
-                </div>
-                `
-            }
-            function tie(){
-                lock()
-                console.log("It\'s a tie")
-                document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
-                    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
-                        x
-                    </span>
-                    <p>
-                        <b>
-                            <h1>It's a tie!</h1>
-                        </b>
-                    </p>
-                </div>
-                `
-            }
-            function you(){
-                lock()
-                console.log("User won")
-                document.getElementById("winner_display").innerHTML += `
-                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
-                    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
-                        x
-                    </span>
-                    <p>
-                        <b>
-                            <h1>You won!</h1>
+                            <h1>${(who==="tie") ? "It\’s a tie!" : `${winners[who].charAt(0).toUpperCase() + winners[who].slice(1)} won!`}</h1>
                         </b>
                     </p>
                 </div>
