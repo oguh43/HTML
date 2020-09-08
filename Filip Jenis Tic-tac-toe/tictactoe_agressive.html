@@ -34,12 +34,11 @@
                 document.getElementById(id).value = "X"
                 document.getElementById(id).disabled = true
                 grid[grid_id[0]][grid_id[1]] = "X"
-                ai()
+                if (winner("play") === "pass"){ai()}
             }
             function ai(){
                 /*Handles ai. The order of O,X matters, if O is firsr, the ai will first attack and than defend.*/
                 for (var player of ["O","X"]){
-                    console.log(player)
                     res = []
                     empty = []
                     for (var column=0;column<3;column++){
@@ -121,9 +120,7 @@
                     if(result.length > 1 && result.length<9){
                         if (grid[1][1]!=""){
                             if(player === "X"){
-                                console.log(result)
                                 grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
-                                console.log(grid_write,"grid_write")
                                 document.getElementById(grid_write.join(",")).value = "O"
                                 document.getElementById(grid_write.join(",")).disabled = true
                                 grid[grid_write[0]][grid_write[1]] = "O"
@@ -140,7 +137,7 @@
                     }
                 }
             }
-            function winner(){
+            function winner(mode="classic"){
                 /*First for handles button locking and styling. Seconds loops through winning combinations and finds the winner. If none are found, the grid is checked for empty spaces, if none are found, the game results in a tie.*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
@@ -163,14 +160,15 @@
                             }
                         }
                         if (result.length === 3){
-                            return annouce(player)
+                            return mode==="classic"?annouce(player):"pass"
                         }
                         result = []
                     }
                 }
                 if (!(JSON.stringify(grid).includes("\"\""))){
-                        return annouce("tie")
+                        return mode==="classic"?annouce("tie"):"pass"
                 }
+                if(mode==="play"){return "pass"}
             }
             function annouce(who){
                 /*First for loop locks all buttons and adds cursor style. Than a winner is displayed using placeholders and a single line if statement(using syntax: (expression)?True:False).*/
