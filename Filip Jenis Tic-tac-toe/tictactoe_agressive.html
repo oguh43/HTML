@@ -183,18 +183,7 @@
                         //document.getElementById(column+","+row).style.background = "#856210"
                     }
                 }
-                document.getElementById("winner_display").innerHTML = `
-                <div class="w3-panel w3-display-container w3-display-topmiddle" style="background: #FFBC1F; width: 100%; text-align: center;">
-                    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">
-                        x
-                    </span>
-                    <p>
-                        <b>
-                            <h1>${(who==="tie") ? "It\’s a tie!" : `${winners[who].charAt(0).toUpperCase() + winners[who].slice(1)} won!`}</h1>
-                        </b>
-                    </p>
-                </div>
-                `
+                document.getElementById("winner_display").innerHTML = `<div class="w3-panel w3-display-container" style="background: #FFBC1F; width: 100%; text-align: center; position: absolute; top: 15%;"><span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">x</span><p><b><h1>${(who==="tie") ? "It\’s a tie!" : `${winners[who].charAt(0).toUpperCase() + winners[who].slice(1)} won!`}</h1></b></p></div>`
             }
         </script>
     </body>
