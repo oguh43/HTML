@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<HTML>
+    <HEAD>
+        <meta charset="UTF-8">
+        <meta name="keywords" content="HTML, CSS, JavaScript">
+        <meta name="description" content=":)">
+        <meta name="author" content="Me lol :)">
+        <link rel="icon" href="images/favicon.ico">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <title>Book Tracker</title>
+
+    </HEAD>
+    <BODY>
+        <div class="bank_out" id="bank_out"></div>
+        <div class="todo" id="todo">
+        <H1>TODO:</H1>
+        <li>Lock buttons on corresponding pages</li>
+        <li>Create a python script to export to excel(with gui?(tkinter or pyqt5?))</li>
+        </div>
+        <script>
+            database = {}
+            main()
+            function main(){
+                document.getElementById("bank_out").innerHTML = ""
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div id="table_container"></div>'
+                document.getElementById("table_container").innerHTML += '<input type="text" placeholder="Search" id="search_querry" class="w3-input w3-border w3-padding w3-green" onkeyup="search()">'
+                document.getElementById("table_container").innerHTML += '<table id="main_table" class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"></table>'
+                document.getElementById("main_table").innerHTML += '<thead><tr class="w3-green"><th>Book Title</th><th>Borrowed date</th><th>Book Id</th><th>Actions</th></tr></thead>'
+                for(key in database){
+                    if (database[key]["returned"] === true){continue}
+                    document.getElementById("main_table").innerHTML += '<tr><td>'+database[key]["title"]+'</td>'+'<td>'+database[key]["borr_date"]+'</td>'+'<td>'+database[key]["book_id"]+'</td><td><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="'+key+'" onclick="return_book(this.id)"></td></tr>'
+                }
+                console.log(database)
+            }
+            function create(){
+                document.getElementById("bank_out").innerHTML = ""
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green"><h2>Book Registration</h2></div>'
+                document.getElementById("bank_out").innerHTML += '<form class="w3-container" action="javascript:add_db(f_name.value,book_id.value)"><label class="w3-text-green"><b>Book Name</b></label><input class="w3-input w3-border w3-light-grey" id="f_name" type="text" required><label class="w3-text-green"><b>Book Id</b></label><input class="w3-input w3-border w3-light-grey" id="book_id" type="number" required><br><button class="w3-button w3-green w3-round-large w3-hover-light-green">Register</button>&nbsp&nbsp<input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" onclick="main()"></form>'
+                document.getElementById("bank_out").innerHTML += '<div id="status" class="w3-text-green">'
+            }
+            function add_db(name,book_id){
+                nick = name
+                count = 0
+                change = nick
+                for(key in database){
+                    if(nick===key){
+                        count++
+                        change = nick + count
+                    }
+                    if(change===key){
+                        count++
+                        change = nick + count
+                    }
+                }
+                nick = change
+                database[nick] = {}
+                database[nick]["title"] = name
+                database[nick]["book_id"] = Math.abs(book_id)
+                database[nick]["returned"] = false
+                database[nick]["borr_date"] = new Date().toLocaleString()
+                database[nick]["ret_date"] = null
+                document.getElementById("status").innerHTML = "<br>&nbsp&nbspSuccess"
+                main()
+            }
+            function return_book(book_name){
+                database[book_name]["returned"] = true
+                database[book_name]["ret_date"] = new Date().toLocaleString()
+                main()
+            }
+            function history(){
+                document.getElementById("bank_out").innerHTML = ""
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div id="table_container"></div>'
+                document.getElementById("table_container").innerHTML += '<input type="text" placeholder="Search" id="search_querry" class="w3-input w3-border w3-padding w3-green" onkeyup="search()">'
+                document.getElementById("table_container").innerHTML += '<table id="main_table" class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"></table>'
+                document.getElementById("main_table").innerHTML += '<thead><tr class="w3-green"><th>Book Title</th><th>Borrowed date</th><th>Book Id</th><th>Returned Date</th><th>Time Difference</th></tr></thead>'
+                for(key in database){
+                    if (database[key]["returned"] === false){continue}
+                    document.getElementById("main_table").innerHTML += '<tr><td>'+database[key]["title"]+'</td>'+'<td>'+database[key]["borr_date"]+'</td>'+'<td>'+database[key]["book_id"]+'</td><td>'+database[key]["ret_date"]+'</td><td>'+time_diff(key)+" hours"+'</td></tr>'
+                }
+            }
+            function time_diff(key){
+                return Math.trunc(Math.abs(new Date(database[key]["borr_date"]).getTime()-new Date(database[key]["ret_date"]).getTime())/ 1000 / 3600)
+            }
+            function download(filename="data.txt"){
+                text = JSON.stringify(database)
+                var pom = document.createElement('a');
+                pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + 
+                encodeURIComponent(text));
+                pom.setAttribute('download', filename);
+                pom.style.display = 'none';
+                document.body.appendChild(pom);
+                pom.click();
+                document.body.removeChild(pom);
+            }
+            function load_database(){
+                document.getElementById("bank_out").innerHTML = ""
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green"><h2>Load Database</h2></div>'
+                document.getElementById("bank_out").innerHTML += '<form class="w3-container" action="javascript:load_db(f_data.value)"><label class="w3-text-green"><b>Database Data</b></label><input class="w3-input w3-border w3-light-grey" id="f_data" type="text" required><br><button class="w3-button w3-green w3-round-large w3-hover-light-green">Load data</button>&nbsp&nbsp<input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" onclick="main()"></form>'
+                document.getElementById("bank_out").innerHTML += '<div id="status" class="w3-text-green">'
+            }
+            function load_db(data){
+                new_db = JSON.parse(data)
+                for(key in new_db){
+                    if((key in Object.keys(database)) && (new_db[key]["returned"]===false)){continue}
+                    database[key] = new_db[key]
+                }
+                main()
+            }
+        </script>
+    </BODY>
+</HTML>
