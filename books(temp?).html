@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <HTML>
     <HEAD>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
         <meta charset="UTF-8">
         <meta name="keywords" content="HTML, CSS, JavaScript">
         <meta name="description" content=":)">
         <meta name="author" content="Me lol :)">
         <link rel="icon" href="images/favicon.ico">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.3/b-html5-1.6.3/b-print-1.6.3/datatables.min.css"/>
+ 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.3/b-html5-1.6.3/b-print-1.6.3/datatables.min.js"></script>
         <title>Book Tracker</title>
 
     </HEAD>
@@ -20,22 +26,40 @@
         <script>
             database = {}
             main()
+            function search() {
+                var input, filter, table, tr, td, i;
+                input = document.getElementById("search_querry");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("main_table");
+                tr = table.getElementsByTagName("tr");
+                for (i = 1; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
             function main(){
                 document.getElementById("bank_out").innerHTML = ""
-                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download_page()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"></div><br><br><div class="w3-container w3-green" style="text-align: center;"><H1>Currently borrowed</H1></div><br>'
                 document.getElementById("bank_out").innerHTML += '<div id="table_container"></div>'
                 document.getElementById("table_container").innerHTML += '<input type="text" placeholder="Search" id="search_querry" class="w3-input w3-border w3-padding w3-green" onkeyup="search()">'
                 document.getElementById("table_container").innerHTML += '<table id="main_table" class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"></table>'
                 document.getElementById("main_table").innerHTML += '<thead><tr class="w3-green"><th>Book Title</th><th>Borrowed date</th><th>Book Id</th><th>Actions</th></tr></thead>'
                 for(key in database){
                     if (database[key]["returned"] === true){continue}
-                    document.getElementById("main_table").innerHTML += '<tr><td>'+database[key]["title"]+'</td>'+'<td>'+database[key]["borr_date"]+'</td>'+'<td>'+database[key]["book_id"]+'</td><td><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="'+key+'" onclick="return_book(this.id)"></td></tr>'
+                    document.getElementById("main_table").innerHTML += '<tr><td>'+database[key]["title"]+'</td>'+'<td>'+database[key]["borr_date"]+'</td>'+'<td>'+database[key]["book_id"]+'</td><td><input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" id="'+key+'" onclick="return_book(this.id)"></td></tr>'
                 }
                 console.log(database)
             }
             function create(){
                 document.getElementById("bank_out").innerHTML = ""
-                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download_page()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" id="ret" onclick="main()"></div><br>'
                 document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green"><h2>Book Registration</h2></div>'
                 document.getElementById("bank_out").innerHTML += '<form class="w3-container" action="javascript:add_db(f_name.value,book_id.value)"><label class="w3-text-green"><b>Book Name</b></label><input class="w3-input w3-border w3-light-grey" id="f_name" type="text" required><label class="w3-text-green"><b>Book Id</b></label><input class="w3-input w3-border w3-light-grey" id="book_id" type="number" required><br><button class="w3-button w3-green w3-round-large w3-hover-light-green">Register</button>&nbsp&nbsp<input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" onclick="main()"></form>'
                 document.getElementById("bank_out").innerHTML += '<div id="status" class="w3-text-green">'
@@ -71,7 +95,7 @@
             }
             function history(){
                 document.getElementById("bank_out").innerHTML = ""
-                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download_page()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" id="ret" onclick="main()"></div><br><br><div class="w3-container w3-green" style="text-align: center;"><H1>History of borrowed books</H1></div><br>'
                 document.getElementById("bank_out").innerHTML += '<div id="table_container"></div>'
                 document.getElementById("table_container").innerHTML += '<input type="text" placeholder="Search" id="search_querry" class="w3-input w3-border w3-padding w3-green" onkeyup="search()">'
                 document.getElementById("table_container").innerHTML += '<table id="main_table" class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"></table>'
@@ -84,6 +108,24 @@
             function time_diff(key){
                 return Math.trunc(Math.abs(new Date(database[key]["borr_date"]).getTime()-new Date(database[key]["ret_date"]).getTime())/ 1000 / 3600)
             }
+            function download_page(){
+                document.getElementById("bank_out").innerHTML = '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download_page()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" id="ret" onclick="main()"></div><br><br><div class="w3-container w3-green" style="text-align: center;"><H1><input type="button" value="Download" onclick="download()" class="w3-button w3-green w3-round-large w3-hover-light-green"></H1></div><br><br><div class="w3-container w3-green" style="text-align: center;"><H1><input type="button" value="Copy to clipboard" onclick="copy_to_clipboard()" class="w3-button w3-green w3-round-large w3-hover-light-green"></H1></div><br><br><div class="w3-container w3-green" style="text-align: center;"><H1>Export to Excel</H1></div>'
+                document.getElementById("bank_out").innerHTML += '<div id="table_container"></div>'
+                document.getElementById("table_container").innerHTML += '<input type="text" placeholder="Search" id="search_querry" class="w3-input w3-border w3-padding w3-green" onkeyup="search()">'
+                document.getElementById("table_container").innerHTML += '<table id="main_table" class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"></table>'
+                document.getElementById("main_table").innerHTML += '<thead><tr class="w3-green"><th>Book Title</th><th>Borrowed date</th><th>Book Id</th><th>Returned Date</th><th>Time Difference</th></tr></thead>'
+                for(key in database){
+                    document.getElementById("main_table").innerHTML += `<tr><td>${database[key]["title"]}</td><td>${database[key]["borr_date"]}</td><td>${database[key]["book_id"]}</td><td>${(database[key]["ret_date"]===null)?'Not Returned':database[key]["ret_date"]}</td><td>${(database[key]["ret_date"]===null)?"Not Returned":time_diff(key)}</td></tr>`
+                }
+                $(document).ready(function() {
+                    $('#main_table').DataTable( {
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'excelHtml5',
+                        ]
+                    } );
+                } );
+            }
             function download(filename="data.txt"){
                 text = JSON.stringify(database)
                 var pom = document.createElement('a');
@@ -95,12 +137,33 @@
                 pom.click();
                 document.body.removeChild(pom);
             }
+            function copy_to_clipboard(){
+                var dummy = document.createElement("textarea");
+                document.body.appendChild(dummy);
+                dummy.value = JSON.stringify(database);
+                dummy.select();
+                document.execCommand("copy");
+                document.body.removeChild(dummy);
+                main();
+            }
             function load_database(){
                 document.getElementById("bank_out").innerHTML = ""
-                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-light-green" value="Return" id="ret" onclick="main()"></div><br>'
+                document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green" style="text-align: center;"><h1><b>Currently borrowed</b></h1><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Add book" id="create" onclick="create()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="View History" id="history" onclick="history()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Export data" id="export" onclick="download_page()"><input type="button" class="w3-button w3-green w3-round-large w3-hover-light-green" value="Load Database" id="load" onclick="load_database()"><input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" id="ret" onclick="main()"></div><br>'
                 document.getElementById("bank_out").innerHTML += '<div class="w3-container w3-green"><h2>Load Database</h2></div>'
                 document.getElementById("bank_out").innerHTML += '<form class="w3-container" action="javascript:load_db(f_data.value)"><label class="w3-text-green"><b>Database Data</b></label><input class="w3-input w3-border w3-light-grey" id="f_data" type="text" required><br><button class="w3-button w3-green w3-round-large w3-hover-light-green">Load data</button>&nbsp&nbsp<input type="button" class="w3-button w3-red w3-round-large w3-hover-black" value="Return" onclick="main()"></form>'
+                document.getElementById("bank_out").innerHTML += '<br><br><div class="w3-container w3-green" style="text-align: center;"><H1>Upload File</H1></div><br>&nbsp&nbsp&nbsp<input type="file" name="inputfile" class="w-button w3-green" id="inputfile">'
                 document.getElementById("bank_out").innerHTML += '<div id="status" class="w3-text-green">'
+                document.getElementById('inputfile') 
+                .addEventListener('change', function() { 
+                
+                    var fr=new FileReader(); 
+                    fr.onload=function(){ 
+                        
+                        load_db(fr.result); 
+                    }
+                    
+                    fr.readAsText(this.files[0]);
+                })
             }
             function load_db(data){
                 new_db = JSON.parse(data)
