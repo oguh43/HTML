@@ -26,6 +26,7 @@
             grid = {0:["","",""],1:["","",""],2:["","",""]}
             result = []
             combos = [["0,0","0,1","0,2"],["1,0","1,1","1,2"],["2,0","2,1","2,2"],["0,0","1,0","2,0"],["0,1","1,1","2,1"],["0,2","1,2","2,2"],["0,0","1,1","2,2"],["0,2","1,1","2,0"]]
+            l_combos = [["1,0","0,0","0,1"],["0,1","0,2","1,2"],["1,0","2,0","2,1"],["1,2","2,2","2,1"]]
             function clickButton(id){
                 /*Handles button clicking. Is responsible for executing ai*/
                 grid_id = id.split(",")
@@ -107,6 +108,24 @@
                         grid[empty[0][0]][empty[0][1]] = "O"
                         return winner()
                     }
+                    //L
+                    for(var outer_combo of l_combos){
+                        res = []
+                        empty = []
+                        for(var combo of outer_combo){
+                            if(document.getElementById(combo).value === "X"){
+                                res.push("X")
+                            }else{
+                                empty.push(combo)
+                            }
+                        }
+                        if(res.length === 2 && document.getElementById(empty[0]).value === "O"){
+                            document.getElementById(empty[0]).value = "O"
+                            document.getElementById(empty[0]).disabled = true
+                            grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
+                            return winner()
+                        }
+                    }
                     result = []
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
@@ -179,7 +198,7 @@
                         document.getElementById(column+","+row).disabled = true
                         document.getElementById(column+","+row).style.cursor = "not-allowed"
                         /*Uncomment to shade buttons after the game*/
-                        //document.getElementById(column+","+row).style.background = "#856210"
+                        document.getElementById(column+","+row).style.background = "#856210"
                     }
                 }
                 document.getElementById("winner_display").innerHTML = `<div class="w3-panel w3-display-container" style="background: #FFBC1F; width: 100%; text-align: center; position: absolute; top: 15%;"><span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">x</span><p><b><h1>${(who==="tie") ? "It\’s a tie!" : `${(who==="X")?"You":"Ai"} won!`}</h1></b></p></div>`
