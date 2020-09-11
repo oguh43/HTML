@@ -177,13 +177,13 @@
                             }
                         }
                         if (result.length === 3){
-                            return mode==="classic"?annouce(player):"pass"
+                            return annouce(player)
                         }
                         result = []
                     }
                 }
                 if (!(JSON.stringify(grid).includes("\"\""))){
-                        return mode==="classic"?annouce("tie"):"pass"
+                        return annouce("tie")
                 }
                 if(mode==="play"){return "pass"}
             }
