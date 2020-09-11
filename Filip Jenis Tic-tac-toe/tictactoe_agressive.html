@@ -108,24 +108,6 @@
                         grid[empty[0][0]][empty[0][1]] = "O"
                         return winner()
                     }
-                    //L
-                    for(var outer_combo of l_combos){
-                        res = []
-                        empty = []
-                        for(var combo of outer_combo){
-                            if(document.getElementById(combo).value === "X"){
-                                res.push("X")
-                            }else if(document.getElementById(combo).value === ""){
-                                empty.push(combo)
-                            }
-                        }
-                        if(res.length === 2 && empty.length!=0){
-                            document.getElementById(empty[0]).value = "O"
-                            document.getElementById(empty[0]).disabled = true
-                            grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
-                            return winner()
-                        }
-                    }
                     result = []
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
@@ -137,6 +119,24 @@
                     if(result.length > 1 && result.length<9){
                         if (grid[1][1]!=""){
                             if(player === "X"){
+                                //L
+                                for(var outer_combo of l_combos){
+                                    res = []
+                                    empty = []
+                                    for(var combo of outer_combo){
+                                        if(document.getElementById(combo).value === "X"){
+                                            res.push("X")
+                                        }else if(document.getElementById(combo).value === ""){
+                                            empty.push(combo)
+                                        }
+                                    }
+                                    if(res.length === 2 && empty.length!=0){
+                                        document.getElementById(empty[0]).value = "O"
+                                        document.getElementById(empty[0]).disabled = true
+                                        grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
+                                        return winner()
+                                    }
+                                }
                                 grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
                                 document.getElementById(grid_write.join(",")).value = "O"
                                 document.getElementById(grid_write.join(",")).disabled = true
@@ -177,13 +177,13 @@
                             }
                         }
                         if (result.length === 3){
-                            return annouce(player)
+                            return mode==="classic"?annouce(player):"pass"
                         }
                         result = []
                     }
                 }
                 if (!(JSON.stringify(grid).includes("\"\""))){
-                        return annouce("tie")
+                        return mode==="classic"?annouce("tie"):"pass"
                 }
                 if(mode==="play"){return "pass"}
             }
