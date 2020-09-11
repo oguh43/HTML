@@ -52,8 +52,6 @@
                             }
                         }
                         if(res.length === 2 && empty.length === 1){
-                            document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
-                            document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                             grid[empty[0][0]][empty[0][1]] = "O"
                             return winner()
                         }
@@ -70,8 +68,6 @@
                             }
                         }
                         if(res.length === 2 && empty.length === 1){
-                            document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
-                            document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                             grid[empty[0][0]][empty[0][1]] = "O"
                             return winner()
                         }
@@ -87,8 +83,6 @@
                         }
                     }
                     if(res.length === 2 && empty.length === 1){
-                        document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
-                        document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                         grid[empty[0][0]][empty[0][1]] = "O"
                         return winner()
                     }
@@ -103,8 +97,6 @@
                         }
                     }
                     if(res.length === 2 && empty.length === 1){
-                        document.getElementById(empty[0][0]+","+empty[0][1]).value = "O"
-                        document.getElementById(empty[0][0]+","+empty[0][1]).disabled = true
                         grid[empty[0][0]][empty[0][1]] = "O"
                         return winner()
                     }
@@ -119,7 +111,6 @@
                     if(result.length > 1 && result.length<9){
                         if (grid[1][1]!=""){
                             if(player === "X"){
-                                //L
                                 for(var outer_combo of l_combos){
                                     res = []
                                     empty = []
@@ -131,21 +122,15 @@
                                         }
                                     }
                                     if(res.length === 2 && empty.length!=0){
-                                        document.getElementById(empty[0]).value = "O"
-                                        document.getElementById(empty[0]).disabled = true
                                         grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
                                         return winner()
                                     }
                                 }
                                 grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
-                                document.getElementById(grid_write.join(",")).value = "O"
-                                document.getElementById(grid_write.join(",")).disabled = true
                                 grid[grid_write[0]][grid_write[1]] = "O"
                                 return winner()
                             }
                         }else{
-                            document.getElementById("1,1").value = "O"
-                            document.getElementById("1,1").disabled = true
                             grid[1][1] = "O"
                             return winner()
                         }
@@ -158,13 +143,15 @@
                 /*First for handles button locking and styling. Seconds loops through winning combinations and finds the winner. If none are found, the grid is checked for empty spaces, if none are found, the game results in a tie.*/
                 for(var row=0;row<3;row++){
                     for(var column=0;column<3;column++){
-                        if(document.getElementById(column+","+row).disabled){
-                            document.getElementById(column+","+row).style.cursor = "not-allowed"
-                            document.getElementById(column+","+row).style.background = "#856210"
+                        if(grid[row][column]!=""){
+                            document.getElementById(row+","+column).value = grid[row][column]
+                            document.getElementById(row+","+column).disabled = true
+                            document.getElementById(row+","+column).style.cursor = "not-allowed"
+                            document.getElementById(row+","+column).style.background = "#856210"
                         }
                         else{
-                            document.getElementById(column+","+row).style.cursor = "auto"
-                            document.getElementById(column+","+row).style.background = "#FFBC1F"
+                            document.getElementById(row+","+column).style.cursor = "auto"
+                            document.getElementById(row+","+column).style.background = "#FFBC1F"
                         }
                     }
                 }
@@ -177,13 +164,13 @@
                             }
                         }
                         if (result.length === 3){
-                            return mode==="classic"?annouce(player):"pass"
+                            return annouce(player)
                         }
                         result = []
                     }
                 }
                 if (!(JSON.stringify(grid).includes("\"\""))){
-                        return mode==="classic"?annouce("tie"):"pass"
+                        return annouce("tie")
                 }
                 if(mode==="play"){return "pass"}
             }
