@@ -115,11 +115,11 @@
                         for(var combo of outer_combo){
                             if(document.getElementById(combo).value === "X"){
                                 res.push("X")
-                            }else{
+                            }else if(document.getElementById(combo).value === ""){
                                 empty.push(combo)
                             }
                         }
-                        if(res.length === 2 && document.getElementById(empty[0]).value === "O"){
+                        if(res.length === 2 && empty.length!=0){
                             document.getElementById(empty[0]).value = "O"
                             document.getElementById(empty[0]).disabled = true
                             grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
