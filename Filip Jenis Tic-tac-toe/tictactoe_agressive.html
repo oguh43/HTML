@@ -40,67 +40,24 @@
                 for (var player of ["O","X"]){
                     res = []
                     empty = []
-                    for (var column=0;column<3;column++){
-                        res = []
-                        empty = []
-                        for (var row=0;row<3;row++){
-                            if([player].includes(grid[column][row])){
-                                res.push([column,row])
+                    for (var outer_combos of combos){
+                        for (var combo of outer_combos){
+                            if(document.getElementById(combo).value === player){
+                                res.push(player)
                             }
-                            if([""].includes(grid[column][row])){
-                                empty.push([column,row])
+                            else if (document.getElementById(combo).value === ""){
+                                empty.push(combo)
                             }
                         }
-                        if(res.length === 2 && empty.length === 1){
-                            grid[empty[0][0]][empty[0][1]] = "O"
+                        if (res.length === 2 && empty.length === 1){
+                            grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
                             return winner()
                         }
-                    }
-                    for (var row=0;row<3;row++){
                         res = []
                         empty = []
-                        for (var column=0;column<3;column++){
-                            if([player].includes(grid[column][row])){
-                                res.push([column,row])
-                            }
-                            if([""].includes(grid[column][row])){
-                                empty.push([column,row])
-                            }
-                        }
-                        if(res.length === 2 && empty.length === 1){
-                            grid[empty[0][0]][empty[0][1]] = "O"
-                            return winner()
-                        }
-                    }
-                    res = []
-                    empty = []
-                    for(var row=0,column=0;row<3,column<3;row++,column++){
-                        if([player].includes(grid[column][row])){
-                                res.push([column,row])
-                            }
-                        if([""].includes(grid[column][row])){
-                            empty.push([column,row])
-                        }
-                    }
-                    if(res.length === 2 && empty.length === 1){
-                        grid[empty[0][0]][empty[0][1]] = "O"
-                        return winner()
-                    }
-                    res = []
-                    empty = []
-                    for(var row=0,column=2;row<3,column>=0;row++,column--){
-                        if([player].includes(grid[column][row])){
-                                res.push([column,row])
-                            }
-                        if([""].includes(grid[column][row])){
-                            empty.push([column,row])
-                        }
-                    }
-                    if(res.length === 2 && empty.length === 1){
-                        grid[empty[0][0]][empty[0][1]] = "O"
-                        return winner()
                     }
                     result = []
+                    empty = []
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
                             if (grid[column][row]==""){
