@@ -121,8 +121,17 @@
                     $('#main_table').DataTable( {
                         dom: 'Bfrtip',
                         buttons: [
-                            'excelHtml5',
-                        ]
+                            {
+                                extend: 'collection',
+                                text: 'Export',
+                                buttons: [ 'excelHtml5', 'pdfHtml5', 'print',"csvHtml5" ],
+                                fade:true,
+                            }
+                        ],
+                        searching: false,
+                        ordering: false,
+                        info: false,
+                        paging: false,
                     } );
                 } );
             }
