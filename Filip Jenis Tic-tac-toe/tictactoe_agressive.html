@@ -96,14 +96,12 @@
             }
             function winner(mode="classic"){
                 /*First for handles button locking and styling. Seconds loops through winning combinations and finds the winner. If none are found, the grid is checked for empty spaces, if none are found, the game results in a tie.*/
-                for(var row=0;row<3;row++){
-                    for(var column=0;column<3;column++){
-                        if(grid[row][column]!=""){
-                            $(`#${row+"\\,"+column}`)
-                                .prop({"value":grid[row][column],"disabled":true})
-                                .css({"cursor":"not-allowed","background":"#FFBC1F"})
+                for (var location of combos.slice(0,3).flat()){
+                    if(grid[location.split(",")[0]][location.split(",")[1]] != ""){
+                        $(`#${$.escapeSelector(location)}`)
+                            .prop({"value":grid[location.split(",")[0]][location.split(",")[1]],"disabled":true})
+                            .css({"cursor":"not-allowed","background":"#FFBC1F"})
                         }
-                    }
                 }
                 for (player of ["O","X"]){
                     result = []
