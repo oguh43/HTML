@@ -30,7 +30,6 @@
             l_combos = [["1,0","0,0","0,1"],["0,1","0,2","1,2"],["1,0","2,0","2,1"],["1,2","2,2","2,1"]]
             function clickButton(id){
                 /*Handles button clicking. Is responsible for executing ai*/
-                //$(`#${id}`).prop({"value":"X","disabled":true})
                 grid[id.split(",")[0]][id.split(",")[1]] = "X"
                 if (winner("play") === "pass"){ai()}
             }
