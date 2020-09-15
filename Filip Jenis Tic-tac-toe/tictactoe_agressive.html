@@ -25,7 +25,6 @@
         <div id="winner_display"> </div>
         <script>
             grid = {0:["","",""],1:["","",""],2:["","",""]}
-            result = []
             combos = [["0,0","0,1","0,2"],["1,0","1,1","1,2"],["2,0","2,1","2,2"],["0,0","1,0","2,0"],["0,1","1,1","2,1"],["0,2","1,2","2,2"],["0,0","1,1","2,2"],["0,2","1,1","2,0"]]
             l_combos = [["1,0","0,0","0,1"],["0,1","0,2","1,2"],["1,0","2,0","2,1"],["1,2","2,2","2,1"]]
             function clickButton(id){
@@ -36,9 +35,9 @@
             function ai(){
                 /*Handles ai. The order of O,X matters, if O is firsr, the ai will first attack and than defend.*/
                 for (var player of ["O","X"]){
-                    result = []
-                    empty = []
                     for (var outer_combos of combos){
+                        result = []
+                        empty = []
                         for (var combo of outer_combos){
                             if($(`#${$.escapeSelector(combo)}`).attr("value") === player){
                                 result.push(player)
@@ -50,9 +49,8 @@
                             grid[empty[0].split(",")[0]][empty[0].split(",")[1]] = "O"
                             return winner()
                         }
-                        result = []
-                        empty = []
                     }
+                    result = []
                     for(var row=0; row<3; row++){
                         for(var column=0; column<3; column++){
                             if (grid[column][row]==""){
@@ -78,7 +76,6 @@
                                         return winner()
                                     }
                                 }
-                                console.log("random")
                                 grid_write = result[Math.floor(Math.random()*(result.length-1))].split(",")
                                 grid[grid_write[0]][grid_write[1]] = "O"
                                 return winner()
@@ -99,36 +96,30 @@
                         $(`#${$.escapeSelector(location)}`)
                             .prop({"value":grid[location.split(",")[0]][location.split(",")[1]],"disabled":true})
                             .css({"cursor":"not-allowed","background":"#FFBC1F"})
-                        }
+                    }
                 }
                 for (player of ["O","X"]){
-                    result = []
                     for (var outer_combos of combos){
+                        result = []
                         for (var combo of outer_combos){
-                            if(document.getElementById(combo).value === player){
+                            if($(`#${$.escapeSelector(combo)}`).attr("value") === player){
                                 result.push(player)
                             }
                         }
                         if (result.length === 3){
                             return annouce(player)
                         }
-                        result = []
                     }
                 }
-                if (!(JSON.stringify(grid).includes("\"\""))){
-                        return annouce("tie")
-                }
+                if (!(JSON.stringify(grid).includes("\"\""))){return annouce("tie")}
                 if(mode==="play"){return "pass"}
             }
             function annouce(who){
                 /*First for loop locks all buttons and adds cursor style. Than a winner is displayed using placeholders and a single line if statement(using syntax: (expression)?True:False).*/
-                console.log(who,(who==="X")?"You":"Ai")
-                for(var row=0;row<3;row++){
-                    for(var column=0;column<3;column++){
-                        $(`#${row+"\\,"+column}`)
-                            .prop("disabled",true)
-                            .css({"cursor":"not-allowed","background":"#856210"})
-                    }
+                for (var location of combos.slice(0,3).flat()){
+                    $(`#${$.escapeSelector(location)}`)
+                        .prop("disabled",true)
+                        .css({"cursor":"not-allowed","background":"#856210"})
                 }
                 document.getElementById("winner_display").innerHTML = `<div class="w3-panel w3-display-container" style="background: #FFBC1F; width: 100%; text-align: center; position: absolute; top: 15%;"><span onclick="this.parentElement.style.display='none'" class="w3-button w3-red w3-large w3-display-topright" style="font-weight: bold;">x</span><p><b><h1>${(who==="tie") ? "It\’s a tie!" : `${(who==="X")?"You":"Ai"} won!`}</h1></b></p></div>`
             }
