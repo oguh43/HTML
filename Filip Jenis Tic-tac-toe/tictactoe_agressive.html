@@ -33,7 +33,7 @@
                 if (winner("play") === "pass"){ai()}
             }
             function ai(){
-                /*Handles ai. The order of O,X matters, if O is firsr, the ai will first attack and than defend.*/
+                /*Handles ai. The order of O,X matters, if O is first, the ai will first attack and than defend.*/
                 for (var player of ["O","X"]){
                     for (var outer_combos of combos){
                         result = []
